@@ -1,5 +1,6 @@
 package com.controllers;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,20 +23,26 @@ public class HelloController {
       Connection c;
 	try {
 		c = getConnection();
-		c.prepareStatement("SELECT * FROM useraccount");
 		
 		Statement stmt = c.createStatement();
 		String sql;
-		sql = "SELECT id, first, last, age FROM Employees";
+		sql = "SELECT username, password FROM useraccount";
 		ResultSet rs = stmt.executeQuery(sql);
 		  
+		String username = null;
+		String password = null;
+		
 		while(rs.next()){
-			String username = rs.getString("username");
-	        String password = rs.getString("password");
-	        
-	        model.addAttribute("username", username);
-			model.addAttribute("password", password);
+			username = rs.getString("username");
+	        password = rs.getString("password");
 		}
+		
+		model.addAttribute("username", username);
+		model.addAttribute("password", password);
+		
+		rs.close();
+	    stmt.close();
+	    c.close();
 
 		
 	} catch (URISyntaxException e) {
@@ -50,7 +57,12 @@ public class HelloController {
    }
    
    private static Connection getConnection() throws URISyntaxException, SQLException {
-	    String dbUrl = System.getenv("JDBC_DATABASE_URL");
-	    return DriverManager.getConnection(dbUrl);
+	   URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+	   String username = dbUri.getUserInfo().split(":")[0];
+	   String password = dbUri.getUserInfo().split(":")[1];
+	   String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+	   return DriverManager.getConnection(dbUrl, username, password);
 	}
 }
