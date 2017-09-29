@@ -87,7 +87,7 @@
                 <programs>
                     <program>
                         <mainClass>com.capstone.Main</mainClass>
-                        <name>capstone-app</name>
+                        <name>webapp</name>
                     </program>
                 </programs>
             </configuration>
