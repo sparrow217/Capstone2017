@@ -16,15 +16,15 @@ import org.springframework.ui.ModelMap;
 @Controller
 
 public class HelloController {
-   @RequestMapping(value = "/hello", method = RequestMethod.GET)
-   public String printHello(ModelMap model) {
-      model.addAttribute("message", "Hello Spring MVC Framework!");
-      
-      Connection c;
-	try {
-		c = getConnection();
-		
-		//Class.forName("org.postgresql.Driver");
+	@RequestMapping(value = "/hello", method = RequestMethod.GET)
+	public String printHello(ModelMap model) {
+		model.addAttribute("message", "Hello Spring MVC Framework!");
+	  
+		Connection c;
+		try {
+			c = getConnection();
+			
+			//Class.forName("org.postgresql.Driver");
 		//c = DriverManager.getConnection("postgres://nszxdsponiovbm:63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd@ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
 		
 		Statement stmt = c.createStatement();
@@ -37,26 +37,26 @@ public class HelloController {
 		
 		while(rs.next()){
 			username = rs.getString("username");
-	        password = rs.getString("password");
+		password = rs.getString("password");
 		}
 		
 		model.addAttribute("username", username);
 		model.addAttribute("password", password);
+			
+			rs.close();
+		    stmt.close();
+		    c.close();
 		
-		rs.close();
-	    stmt.close();
-	    c.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (URISyntaxException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-      return "hello";
+  return "hello";
    }
    
    private static Connection getConnection() throws URISyntaxException, SQLException {
