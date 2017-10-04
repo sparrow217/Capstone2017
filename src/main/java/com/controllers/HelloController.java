@@ -24,6 +24,9 @@ public class HelloController {
 	try {
 		c = getConnection();
 		
+		//Class.forName("org.postgresql.Driver");
+		//c = DriverManager.getConnection("postgres://nszxdsponiovbm:63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd@ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
+		
 		Statement stmt = c.createStatement();
 		String sql;
 		sql = "SELECT username, password FROM useraccount";
@@ -45,10 +48,10 @@ public class HelloController {
 	    c.close();
 
 		
-	} catch (URISyntaxException e) {
+	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	} catch (SQLException e) {
+	} catch (URISyntaxException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
