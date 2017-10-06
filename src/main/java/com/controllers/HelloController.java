@@ -22,26 +22,26 @@ public class HelloController {
 	  
 		Connection c;
 		try {
-			c = getConnection();
+			//c = getConnection();
 			
-			//Class.forName("org.postgresql.Driver");
-		//c = DriverManager.getConnection("postgres://nszxdsponiovbm:63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd@ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
+			Class.forName("org.postgresql.Driver");
+			c = DriverManager.getConnection("jdbc:postgresql://ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e?sslmode=require","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
 		
-		Statement stmt = c.createStatement();
-		String sql;
-		sql = "SELECT username, password FROM useraccount";
-		ResultSet rs = stmt.executeQuery(sql);
-		  
-		String username = null;
-		String password = null;
-		
-		while(rs.next()){
-			username = rs.getString("username");
-		password = rs.getString("password");
-		}
-		
-		model.addAttribute("username", username);
-		model.addAttribute("password", password);
+			Statement stmt = c.createStatement();
+			String sql;
+			sql = "SELECT username, password FROM useraccount";
+			ResultSet rs = stmt.executeQuery(sql);
+			  
+			String username = null;
+			String password = null;
+			
+			while(rs.next()){
+				username = rs.getString("username");
+			password = rs.getString("password");
+			}
+			
+			model.addAttribute("username", username);
+			model.addAttribute("password", password);
 			
 			rs.close();
 		    stmt.close();
@@ -51,14 +51,20 @@ public class HelloController {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (URISyntaxException e) {
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-  return "hello";
+		return "hello";
    }
    
+	/**
+	 * This only works on the Heroku server, use DriveManager.getConnection() instead.
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
    private static Connection getConnection() throws URISyntaxException, SQLException {
 	   URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
