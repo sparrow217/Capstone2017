@@ -40,10 +40,10 @@ public class DisciplinaryCoreIdea {
 	   }
 	   
 	   
-	   System.out.printf("\n\nThe size of the array is %d ", x);
+	  // System.out.printf("\n\nThe size of the array is %d ", x);
 	   
 	   
-	   String[] discpList = {"From Molecules to Organisms: Structures and Processes A, Ecosystems: Interactions, Energy, and Dynamics, Heredity: Inheritance of Traits, Biological Evolution: Unity and Diversity, Matter and Its Interactions, Motion and Stability: Forces and Interactions, Energy, Waves and Their Applications in Technologies for Information Transfer, Earth’s Place in the Universe, Earth’s Systems, Earth and Human Activity, Engineering Design, Links Among Engineering, Technology, Science, and Society"};
+	   String[] discpList = {"From Molecules to Organisms: Structures and Processes A, Ecosystems: Interactions, Energy, and Dynamics, Heredity: Inheritance of Traits, Biological Evolution: Unity and Diversity, Matter and Its Interactions, Motion and Stability: Forces and Interactions, Energy, Waves and Their Applications in Technologies for Information Transfer, Earthâ€™s Place in the Universe, Earthâ€™s Systems, Earth and Human Activity, Engineering Design, Links Among Engineering, Technology, Science, and Society"};
 	   int discpListCount = 0; 
 	   int queryCount = 0; 
 	   int resultCount = 0; 
