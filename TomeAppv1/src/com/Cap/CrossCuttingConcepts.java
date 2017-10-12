@@ -40,7 +40,7 @@ public class CrossCuttingConcepts {
 	   }
 	   
 	   
-	   System.out.printf("\n\nThe size of the array is %d ", x);
+	   //System.out.printf("\n\nThe size of the array is %d ", x);
 	   
 	   //String[] crossList = {"Ask Question  Define Problem", "Develop Use Model", "Plan  Carry Investigation", "Analyze  Interpret Data", "Math  Computation Think", "Construction Explanation Design Solution", "Engage Argument Evidence", "Obtain Evaluate Communicate Information"};
 	   String[] crossList = {"Patterns", "Cause and Effect", "Scale, Proportion, and Quantity", "Systems and System Models", "Energy and Matter", "Structure and Function", "Stability and Change" };
