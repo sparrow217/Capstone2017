@@ -40,7 +40,7 @@ public class ScienceAndEngineeringPrac {
 	   }
 	   
 	   
-	   System.out.printf("\n\nThe size of the array is %d ", x);
+	  // System.out.printf("\n\nThe size of the array is %d ", x);
 	   
 	   //String[] sciList = {"Ask Question  Define Problem", "Develop Use Model", "Plan  Carry Investigation", "Analyze  Interpret Data", "Math  Computation Think", "Construction Explanation Design Solution", "Engage Argument Evidence", "Obtain Evaluate Communicate Information"};
 	   String[] sciList = {"Ask Question and Defining Problems", "Developing and Using Models", "Planning and Carrying Out Investigations", "Analzing and Interpreting Data", "Using Mathematics and Computational Thinking", "Construction Explanations and Designing Solutions", "Engaging in Argument From Evidence", "Obtaining, Evaluating, and Communicating Information"};
