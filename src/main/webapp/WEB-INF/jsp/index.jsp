@@ -1,4 +1,6 @@
-<%@page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+   pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -236,12 +238,13 @@
   
 <div class="container">
   <h2>Please Enter the Lesson Data Below:</h2>
-  <form>
+  <form:form method="post" action="result" modelAttribute="text">>
     <div class="form-group">
       <label for="comment">Data:</label>
-      <textarea class="form-control" rows="5" id="comment"></textarea>
+      <form:textarea path="lessonPlan" rows="5"></form:textarea>
+      <form:button>Submit</form:button>
     </div>
-  </form>
+  </form:form>
 </div>
 
 
