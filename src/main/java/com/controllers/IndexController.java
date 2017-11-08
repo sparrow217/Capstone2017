@@ -1,16 +1,23 @@
 package com.controllers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import com.capstone.CrossCuttingConcepts;
-import com.capstone.DisciplinaryCoreIdea;
-import com.capstone.ScienceAndEngineeringPrac;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.capstone.TextAnalysis;
+import com.model.FrameworkResultsModel;
+import com.model.FrameworkXExpectationsResultsModel;
+import com.model.PerformanceExpectationsResultModel;
 import com.model.TextAreaBean;
 
 @Controller
@@ -26,65 +33,101 @@ public class IndexController {
 	}
 
 	@RequestMapping(value = "/result", method = RequestMethod.POST)
-	public String processForm(@ModelAttribute("text") TextAreaBean t, ModelMap model)
+	public ModelAndView processForm(@ModelAttribute("text") TextAreaBean t)
 	{
-		String sciResult = "";
-		String discResult = "";
-		String concResult = "";
+		ModelAndView model = new ModelAndView("/result");
 		
-		ScienceAndEngineeringPrac sci = new ScienceAndEngineeringPrac();
-		DisciplinaryCoreIdea disc = new DisciplinaryCoreIdea();
-		CrossCuttingConcepts conc = new CrossCuttingConcepts();
+		TextAnalysis ta = new TextAnalysis();
+		List<FrameworkResultsModel> frameworkResults = new ArrayList<FrameworkResultsModel>();
+		List<PerformanceExpectationsResultModel> PerformanceResults = new ArrayList<PerformanceExpectationsResultModel>();
+		List<FrameworkXExpectationsResultsModel> frameXExpecResults = new ArrayList<FrameworkXExpectationsResultsModel>();
 		
-		 ArrayList <String> sciAndEngResults =  sci.checkMessage(t.getLessonPlan());
-	      
-	      
-	      if( sciAndEngResults.size() > 0) 
-	      {
-	      
-		      String sciAndEngList = Arrays.toString(sciAndEngResults.toArray()).replace("[", "").replace("]", "").replace(",", "");
-		      sciResult += sciAndEngList;
-	      
-	      }
-	      else if( sciAndEngResults.size() == 0 )
-	      {
-	    	  sciResult += "There were no matching results.\n";
-	      }
-	      
-	      ArrayList <String> discpAndCoreResults =  disc.checkMessage(t.getLessonPlan());
-	      
-	      
-	      if( discpAndCoreResults.size() > 0)
-	      {
-	      
-		      String discpAndCoreList = Arrays.toString(discpAndCoreResults.toArray()).replace("[", "").replace("]", "").replace(",", "");
-		      discResult += discpAndCoreList;
-	      
-	      }
-	      else if( discpAndCoreResults.size() == 0 )
-	      {
-	    	  discResult += "There were no matching results.\n";
-	      }
-	      
-	ArrayList <String> crossCutResults =  conc.checkMessage(t.getLessonPlan());
-	      
-	      
-	      if( crossCutResults.size() > 0)
-	      {
-	     
-		      String crossList = Arrays.toString(crossCutResults.toArray()).replace("[", "").replace("]", "").replace(",", "");
-		      concResult += crossList;
-	      
-	      }
-	      else if( crossCutResults.size() == 0 )
-	      {
-	    	  concResult += "There were no matching results.\n";
-	      }
+		Connection c;
+		try {
+			//c = getConnection();
+			
+			Class.forName("org.postgresql.Driver");
+			c = DriverManager.getConnection("jdbc:postgresql://ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e?sslmode=require","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
 		
-		model.addAttribute("sciResult", sciResult);
-		model.addAttribute("coreResult", discResult);
-		model.addAttribute("crossResult", concResult);
+			Statement stmt = c.createStatement();
+			String sql;
+			sql = "SELECT * FROM Framework"; //Get the framework table
+			ResultSet rs = stmt.executeQuery(sql);
+			  
+			
+			while(rs.next()){
+				String frameworkSubelement = rs.getString("frameworkSubelement");
+				// Look for a match
+				if(ta.textMatch(t.getLessonPlan(), frameworkSubelement)){
+					FrameworkResultsModel rm = new FrameworkResultsModel();
+					
+					rm.setDimension(rs.getString("Dimension"));
+					rm.setFrameworkElement(rs.getString("FrameworkElement"));
+					rm.setFrameworkSubelement(frameworkSubelement);
+					
+					frameworkResults.add(rm);
+				}
+			}
+			// Return matches
+			model.addObject("frameworkResults", frameworkResults);
+			
+			sql = "SELECT * FROM PerformanceExpectations";
+			rs = stmt.executeQuery(sql);
+			// Look for a match
+			while(rs.next()){
+				String performanceExpectation = rs.getString("PerformanceExpectation");
+				
+				if(ta.textMatch(t.getLessonPlan(), performanceExpectation)){
+					PerformanceExpectationsResultModel pe = new PerformanceExpectationsResultModel();
+					
+					pe.setPEID(rs.getString("PEID"));
+					pe.setPerformanceExpectation(performanceExpectation);
+					
+					PerformanceResults.add(pe);
+				}
+			}
+			// Return matches
+			model.addObject("PerformanceResults", PerformanceResults);
+			
+			// Join all 3 tables
+			sql = "SELECT FrameworkXExpectations.PEID, FrameworkXExpectations.frameworkSubelement FROM FrameworkXExpectations, Framework, PerformanceExpectations WHERE FrameworkXExpectations.PEID = PerformanceExpectations.PEID AND FrameworkXExpectations.frameworkSubelement = Framework.frameworkSubelement";
+			rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				for(FrameworkResultsModel f : frameworkResults) {
+					for(PerformanceExpectationsResultModel p : PerformanceResults) {
+						// Look for matches with previous results
+						if(rs.getString("PEID").equals(p.getPEID()) && rs.getString("frameworkSubelement").equals(f.getFrameworkSubelement())) {
+				
+			
+							FrameworkXExpectationsResultsModel fe = new FrameworkXExpectationsResultsModel();
+							
+							fe.setPEID(rs.getString("PEID"));
+							fe.setFrameworkSubelement(rs.getString("frameworkSubelement"));
+							
+							frameXExpecResults.add(fe);
+						}
+					}
+				}
+			}
+			// Return results
+			model.addObject("frameXExpecResults", frameXExpecResults);
+			
+			rs.close();
+		    stmt.close();
+		    c.close();
 		
-		return "result";
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return model;
 	}
+	
 }
