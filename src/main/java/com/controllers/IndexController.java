@@ -1,133 +1,24 @@
 package com.controllers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.capstone.TextAnalysis;
-import com.model.FrameworkResultsModel;
-import com.model.FrameworkXExpectationsResultsModel;
-import com.model.PerformanceExpectationsResultModel;
-import com.model.TextAreaBean;
+import com.model.ListModel;
 
 @Controller
 public class IndexController {
 	@ModelAttribute("text")
-	   public TextAreaBean setUpUserForm() {
-	      return new TextAreaBean();
+	   public ListModel setUpUserForm() {
+	      return new ListModel();
 	   }
 	
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	@RequestMapping(value = {"/index", "/"}, method = RequestMethod.GET)
 	public String initialize() {
 		return "index";
 	}
 
-	@RequestMapping(value = "/result", method = RequestMethod.POST)
-	public ModelAndView processForm(@ModelAttribute("text") TextAreaBean t)
-	{
-		ModelAndView model = new ModelAndView("/result");
-		
-		TextAnalysis ta = new TextAnalysis();
-		List<FrameworkResultsModel> frameworkResults = new ArrayList<FrameworkResultsModel>();
-		List<PerformanceExpectationsResultModel> PerformanceResults = new ArrayList<PerformanceExpectationsResultModel>();
-		List<FrameworkXExpectationsResultsModel> frameXExpecResults = new ArrayList<FrameworkXExpectationsResultsModel>();
-		
-		Connection c;
-		try {
-			//c = getConnection();
-			
-			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection("jdbc:postgresql://ec2-54-163-229-169.compute-1.amazonaws.com:5432/d20jlcje56dt5e?sslmode=require","nszxdsponiovbm","63c16f5fdfaec2dfc713dd4768cc1a905c2ce0095c3ac37894e29587cd104bbd");
-		
-			Statement stmt = c.createStatement();
-			String sql;
-			sql = "SELECT * FROM Framework"; //Get the framework table
-			ResultSet rs = stmt.executeQuery(sql);
-			  
-			
-			while(rs.next()){
-				String frameworkSubelement = rs.getString("frameworkSubelement");
-				// Look for a match
-				if(ta.textMatch(t.getLessonPlan(), frameworkSubelement)){
-					FrameworkResultsModel rm = new FrameworkResultsModel();
-					
-					rm.setDimension(rs.getString("Dimension"));
-					rm.setFrameworkElement(rs.getString("FrameworkElement"));
-					rm.setFrameworkSubelement(frameworkSubelement);
-					
-					frameworkResults.add(rm);
-				}
-			}
-			// Return matches
-			model.addObject("frameworkResults", frameworkResults);
-			
-			sql = "SELECT * FROM PerformanceExpectations";
-			rs = stmt.executeQuery(sql);
-			// Look for a match
-			while(rs.next()){
-				String performanceExpectation = rs.getString("PerformanceExpectation");
-				
-				if(ta.textMatch(t.getLessonPlan(), performanceExpectation)){
-					PerformanceExpectationsResultModel pe = new PerformanceExpectationsResultModel();
-					
-					pe.setPEID(rs.getString("PEID"));
-					pe.setPerformanceExpectation(performanceExpectation);
-					
-					PerformanceResults.add(pe);
-				}
-			}
-			// Return matches
-			model.addObject("PerformanceResults", PerformanceResults);
-			
-			// Join all 3 tables
-			sql = "SELECT FrameworkXExpectations.PEID, FrameworkXExpectations.frameworkSubelement FROM FrameworkXExpectations, Framework, PerformanceExpectations WHERE FrameworkXExpectations.PEID = PerformanceExpectations.PEID AND FrameworkXExpectations.frameworkSubelement = Framework.frameworkSubelement";
-			rs = stmt.executeQuery(sql);
-			while(rs.next()){
-				for(FrameworkResultsModel f : frameworkResults) {
-					for(PerformanceExpectationsResultModel p : PerformanceResults) {
-						// Look for matches with previous results
-						if(rs.getString("PEID").equals(p.getPEID()) && rs.getString("frameworkSubelement").equals(f.getFrameworkSubelement())) {
-				
-			
-							FrameworkXExpectationsResultsModel fe = new FrameworkXExpectationsResultsModel();
-							
-							fe.setPEID(rs.getString("PEID"));
-							fe.setFrameworkSubelement(rs.getString("frameworkSubelement"));
-							
-							frameXExpecResults.add(fe);
-						}
-					}
-				}
-			}
-			// Return results
-			model.addObject("frameXExpecResults", frameXExpecResults);
-			
-			rs.close();
-		    stmt.close();
-		    c.close();
-		
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		return model;
-	}
+	
 	
 }

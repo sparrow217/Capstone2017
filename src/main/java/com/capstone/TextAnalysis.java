@@ -12,17 +12,26 @@ public class TextAnalysis {
 	 public boolean textMatch(String query, String data) {
 		 String queryContainer[] = query.split("\\s");
 		 String dataContainer[] = data.split("\\s");
+		 float wordCount = 0;
 		 
 		 for(int i = 0; i < queryContainer.length; i++) {
-			 // Check if its an ignored word
-			 if(checkIgnore(queryContainer[i].toLowerCase())) {
+			 
+			 String queryWord = wordFix(queryContainer[i]);
+			// Check if its an ignored word
+			 if(checkIgnore(queryWord)) {
+				 
 				 for(int j = 0; j < dataContainer.length; j++) {
+					 String dataWord = wordFix(dataContainer[j]);
 					 // Check if the two words match
-					 if(queryContainer[i].toLowerCase().equals(dataContainer[j].toLowerCase())){
-						 return true;
+					 if(queryWord.equals(dataWord)){
+						 wordCount++;
 					 }
 				 }
 			 }
+		 }
+		 // Return true is the percentage of matched words is over a specified threshold
+		 if(wordCount / dataContainer.length > 0.12) {
+			 return true;
 		 }
 		 return false;
 	 }
@@ -41,5 +50,17 @@ public class TextAnalysis {
 			 }
 		 }
 		 return check;
+	 }
+	 
+	 private String wordFix(String word) {
+		 word = word.toLowerCase();
+		 word = word.replace(",", "");
+		 word = word.replace(".", "");
+		 word = word.replace("!", "");
+		 word = word.replace("?", "");
+		 word = word.replace("(", "");
+		 word = word.replace(")", "");
+		 word = word.replace("\"", "");
+		 return word;
 	 }
 }

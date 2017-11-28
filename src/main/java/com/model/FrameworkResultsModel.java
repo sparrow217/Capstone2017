@@ -1,6 +1,7 @@
 package com.model;
 
 public class FrameworkResultsModel {
+	private int id;
 	private String dimension;
 	private String frameworkElement;
 	private String frameworkSubelement;
@@ -22,6 +23,12 @@ public class FrameworkResultsModel {
 	}
 	public void setFrameworkSubelement(String frameworkSubelement) {
 		this.frameworkSubelement = frameworkSubelement;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

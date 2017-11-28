@@ -6,15 +6,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		
 		<!-- Theme Made By www.w3schools.com - No Copyright -->
-		<title>Results</title>
+		<title>Saved Lesson Plans</title>
 		  <meta charset="utf-8">
 		  <meta name="viewport" content="width=device-width, initial-scale=1">
 		  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
 		  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-		
 		<style>
 			table {
 			    border: 1px solid black;
@@ -25,6 +23,12 @@
 			    padding: 15px;
 			    text-align: left;
 			    border: 1px solid black;
+			}
+			#data {
+			    
+			    padding: 10px;
+			    border: 5px solid gray;
+			    margin: 0;
 			}
 			body {
 			      font: 400 15px Lato, sans-serif;
@@ -230,60 +234,55 @@
 	  </div>
 	</nav>
 	
-    <div class="jumbotron text-center">
+	 <div class="jumbotron text-center">
   		<h1>Tome Search</h1> 
     </div> 
 	
-	<form:form method="post" action="saved" modelAttribute="text">
-		<h1>Title</h1>
-		<form:checkbox cssStyle="display: none" path="title" value="${Title}"/>
-		${Title}
-		<h1>LessonPlan</h1>
-		
-		<form:checkbox cssStyle="display: none" path="lessonPlan" value="${Lesson}"/>
-		${Lesson}
-		
-		<h1>Framework Matches:</h1>
-	
-		<table style="width:100%">
-			<tr>
-				<th>Select</th>
-		    	<th>Dimension</th>
-		    	<th>FrameworkElement</th> 
-		    	<th>FrameworkSubelement</th>
-			</tr>
-			<c:if test="${not empty frameworkResults}">
-			    	<c:forEach var = "r" items = "${frameworkResults}">
-				    	<tr>
-				    		<td><form:checkbox path="flist" value="${r.id}"/></td>
-				        	<td>${r.dimension}</td>
-				        	<td>${r.frameworkElement}</td>
-				        	<td>${r.frameworkSubelement}</td>
-				        </tr>
-			        </c:forEach>
-			</c:if>
-		</table>
-		
-	
-	
-		<h1>Performance Expectation Matches:</h1>
-		<table style="width:100%">
-			<tr>
-				<th>Select</th>
-		    	<th>PEID</th>
-		    	<th>PerformanceExpectation</th> 
-			</tr>
-			<c:if test="${not empty PerformanceResults}">
-			    	<c:forEach var = "r" items = "${PerformanceResults}">
-				    	<tr>
-				    		<td><form:checkbox path="plist" value="${r.PEID}"/></td>
-				        	<td>${r.PEID}</td>
-				        	<td>${r.performanceExpectation}</td>
-				        </tr>
-			        </c:forEach>
-			</c:if>
-		</table>
-		<form:button>Save</form:button>
-	</form:form>
+		<c:if test="${not empty SavedResults}">
+			<c:forEach var = "s" items = "${SavedResults}">
+				<div id="data">
+					<h2>Title</h2>
+					${s.title}
+					<h2>Lesson Plan</h2>
+					${s.lessonPlan}
+					<h2>Framework Elements</h2>
+					<table style="width:100%">
+						<tr>
+					    	<th>Dimension</th>
+					    	<th>FrameworkElement</th> 
+					    	<th>FrameworkSubelement</th>
+						</tr>
+						<c:if test="${not empty s.frm}">
+						    	<c:forEach var = "r" items = "${s.frm}">
+							    	<tr>
+							        	<td>${r.dimension}</td>
+							        	<td>${r.frameworkElement}</td>
+							        	<td>${r.frameworkSubelement}</td>
+							        </tr>
+						        </c:forEach>
+						</c:if>
+					</table>
+					
+					<h2>Performance Expectations</h2>
+					<table style="width:100%">
+						<tr>
+					    	<th>PEID</th>
+					    	<th>Performance Expectation</th> 
+						</tr>
+						<c:if test="${not empty s.perm}">
+						    	<c:forEach var = "r" items = "${s.perm}">
+							    	<tr>
+							        	<td>${r.PEID}</td>
+							        	<td>${r.performanceExpectation}</td>
+							        </tr>
+						        </c:forEach>
+						</c:if>
+					</table>
+				</div>
+				<br/>
+				<br/>
+				<br/>
+			</c:forEach>
+		</c:if>
 	</body>
 </html>

@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
   <!-- Theme Made By www.w3schools.com - No Copyright -->
-  <title>Bootstrap Theme Company Page</title>
+  <title>Tome Search</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -209,6 +209,8 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">New Lesson Plan</a></li>
+      	<li><a href="/saved">Saved Lesson Plans</a></li>
         <li><a href="http://district.ops.org">Main Page</a></li>
         <li><a href="http://ngss.nsta.org/">NGSS</a></li>
           <li><a href="#about">ABOUT</a></li>
@@ -238,10 +240,13 @@
   
 <div class="container">
   <h2>Please Enter the Lesson Data Below:</h2>
-  <form:form method="post" action="result" modelAttribute="text">>
+  <form:form method="post" action="result" modelAttribute="text">
     <div class="form-group">
-      <label for="comment">Data:</label>
-      <form:textarea path="lessonPlan" rows="5"></form:textarea>
+      <label for="comment"></label>
+      <h3>Title</h3>
+      <form:input path="title"></form:input>
+      <h3>Lesson Plan</h3>
+      <form:textarea path="lessonPlan" rows="5" cssStyle="width:100%"></form:textarea>
       <form:button>Submit</form:button>
     </div>
   </form:form>
@@ -256,7 +261,7 @@
     </div>
     <div class="col-sm-8">
       <h2>Usage:</h2><br>
-      <h4>lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h4><br>
+      <h4>Enter a title and a lesson plan then click the submit button. Select which results you would like to save then click the save button.</h4><br>
       </div>
   </div>
 </div>
