@@ -251,6 +251,7 @@
 		    	<th>Dimension</th>
 		    	<th>FrameworkElement</th> 
 		    	<th>FrameworkSubelement</th>
+		    	<th>Match Percent</th>
 			</tr>
 			<c:if test="${not empty frameworkResults}">
 			    	<c:forEach var = "r" items = "${frameworkResults}">
@@ -259,6 +260,7 @@
 				        	<td>${r.dimension}</td>
 				        	<td>${r.frameworkElement}</td>
 				        	<td>${r.frameworkSubelement}</td>
+				        	<td>${r.percent}</td>
 				        </tr>
 			        </c:forEach>
 			</c:if>
@@ -272,6 +274,7 @@
 				<th>Select</th>
 		    	<th>PEID</th>
 		    	<th>PerformanceExpectation</th> 
+		    	<th>Match Percent</th>
 			</tr>
 			<c:if test="${not empty PerformanceResults}">
 			    	<c:forEach var = "r" items = "${PerformanceResults}">
@@ -279,6 +282,7 @@
 				    		<td><form:checkbox path="plist" value="${r.PEID}"/></td>
 				        	<td>${r.PEID}</td>
 				        	<td>${r.performanceExpectation}</td>
+				        	<td>${r.percent}</td>
 				        </tr>
 			        </c:forEach>
 			</c:if>

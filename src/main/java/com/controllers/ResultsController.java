@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -47,17 +49,30 @@ public class ResultsController {
 			while(rs.next()){
 				String frameworkSubelement = rs.getString("FrameworkSubelement");
 				// Look for a match
-				if(ta.textMatch(t.getLessonPlan(), frameworkSubelement)){
+				float p = ta.textMatch(t.getLessonPlan(), frameworkSubelement);
+				if(p > 0.15){
 					FrameworkResultsModel rm = new FrameworkResultsModel();
 					
 					rm.setDimension(rs.getString("Dimension"));
 					rm.setFrameworkElement(rs.getString("FrameworkElement"));
 					rm.setFrameworkSubelement(frameworkSubelement);
 					rm.setId(rs.getInt("f_id"));
+					rm.setPercent(p * 100);
 					
 					frameworkResults.add(rm);
 				}
 			}
+			
+			// Sort by percent
+			Collections.sort(frameworkResults, Collections.reverseOrder(new Comparator<FrameworkResultsModel>() {
+				@Override
+				public int compare(FrameworkResultsModel f1, FrameworkResultsModel f2) {
+					
+					return Float.compare(f1.getPercent(), f2.getPercent());
+					
+				}
+			}));
+			
 			// Return matches
 			model.addObject("frameworkResults", frameworkResults);
 			
@@ -66,16 +81,28 @@ public class ResultsController {
 			// Look for a match
 			while(rs.next()){
 				String performanceExpectation = rs.getString("PerformanceExpectation");
-				
-				if(ta.textMatch(t.getLessonPlan(), performanceExpectation)){
+				float p = ta.textMatch(t.getLessonPlan(), performanceExpectation);
+				if(p > 0.15){
 					PerformanceExpectationsResultModel pe = new PerformanceExpectationsResultModel();
 					
 					pe.setPEID(rs.getString("PEID"));
 					pe.setPerformanceExpectation(performanceExpectation);
+					pe.setPercent(p * 100);
 					
 					PerformanceResults.add(pe);
 				}
 			}
+			
+			// Sort by percent
+			Collections.sort(PerformanceResults, Collections.reverseOrder(new Comparator<PerformanceExpectationsResultModel>() {
+				@Override
+				public int compare(PerformanceExpectationsResultModel f1, PerformanceExpectationsResultModel f2) {
+					
+					return Float.compare(f1.getPercent(), f2.getPercent());
+					
+				}
+			}));
+			
 			// Return matches
 			model.addObject("PerformanceResults", PerformanceResults);
 			

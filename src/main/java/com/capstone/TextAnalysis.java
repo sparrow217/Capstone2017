@@ -1,7 +1,7 @@
 package com.capstone;
 
 public class TextAnalysis {
-	private String[] ignore = {"the", "it", "those", "these", "in", "a", "of", "on", "and", "or", "thus", "to", "this", "for", "with", "are", "can", "be", "use"};
+	private String[] ignore = {"the", "it", "those", "these", "in", "a", "of", "on", "and", "or", "thus", "to", "this", "for", "with", "are", "can", "be", "use", "their", "they", "an", "what", "do", "may", "will", "have", "also", "which"};
 	
 	/**
 	 * Matches the individual words of query to the words of data.
@@ -9,7 +9,7 @@ public class TextAnalysis {
 	 * @param data
 	 * @return
 	 */
-	 public boolean textMatch(String query, String data) {
+	 public float textMatch(String query, String data) {
 		 String queryContainer[] = query.split("\\s");
 		 String dataContainer[] = data.split("\\s");
 		 float wordCount = 0;
@@ -29,11 +29,10 @@ public class TextAnalysis {
 				 }
 			 }
 		 }
-		 // Return true is the percentage of matched words is over a specified threshold
-		 if(wordCount / dataContainer.length > 0.12) {
-			 return true;
-		 }
-		 return false;
+		 // Return the percentage of matched words
+		
+		return wordCount / dataContainer.length;
+		
 	 }
 	 
 	 /**

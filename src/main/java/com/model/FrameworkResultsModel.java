@@ -1,10 +1,11 @@
 package com.model;
 
-public class FrameworkResultsModel {
+public class FrameworkResultsModel{
 	private int id;
 	private String dimension;
 	private String frameworkElement;
 	private String frameworkSubelement;
+	public float percent;
 	
 	public String getDimension() {
 		return dimension;
@@ -30,6 +31,11 @@ public class FrameworkResultsModel {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+	public float getPercent() {
+		return percent;
+	}
+	public void setPercent(float percent) {
+		this.percent = percent;
+	}
 	
 }
