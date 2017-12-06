@@ -13,6 +13,7 @@ public class TextAnalysis {
 		 String queryContainer[] = query.split("\\s");
 		 String dataContainer[] = data.split("\\s");
 		 float wordCount = 0;
+		 float ignoredWords = 0;
 		 
 		 for(int i = 0; i < queryContainer.length; i++) {
 			 
@@ -29,9 +30,18 @@ public class TextAnalysis {
 				 }
 			 }
 		 }
-		 // Return the percentage of matched words
+		 
+		 //See how many words in data are ignored
+		 for(int j = 0; j < dataContainer.length; j++) {
+			 String dataWord = wordFix(dataContainer[j]);
+			 // Check if its an ignored word
+			 if(!checkIgnore(dataWord)) {
+				 ignoredWords++;
+			 }
+		 }
+		 // Return the percentage of valid matched words
 		
-		return wordCount / dataContainer.length;
+		return wordCount / (dataContainer.length - ignoredWords);
 		
 	 }
 	 

@@ -11,6 +11,7 @@
   <properties>
     <tomcat.version>8.5.2</tomcat.version>
     <spring-framework-version>4.3.9.RELEASE</spring-framework-version>
+    <springsecurity.version>4.2.3.RELEASE</springsecurity.version>
  </properties>
   
   <dependencies>
@@ -34,6 +35,19 @@
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-jdbc</artifactId>
 	    <version>${spring-framework-version}</version>
+	</dependency>
+  
+  <!-- Spring Security -->
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-web</artifactId>
+		<version>${springsecurity.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-config</artifactId>
+		<version>${springsecurity.version}</version>
 	</dependency>
   
   	 <dependency>
